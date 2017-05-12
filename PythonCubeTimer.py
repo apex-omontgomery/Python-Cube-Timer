@@ -2,7 +2,7 @@ from time import sleep, process_time
 from collections import OrderedDict
 #from PyQt5.QtWidgets import *
 #from PyQt5.QtGui import *
-import csv#, sys
+import csv
 
 #The inspection time in seconds
 #Change it to whatever suits you
@@ -10,10 +10,10 @@ inspectionTime = 15
 
 #The time keys
 #Change it to whatever suits you
-timeKeys = [60, 55, 50, 45, 40, 35, 30, 25, 20, 15, 10, 5]
+timeKeys = [35, 30, 25, 24, 23, 22, 21, 20]
 
 #Writes the passed value to the times file
-def writeLatestTime(time):
+def writeTime(time):
 	with open("times.txt", "a") as times:
 		times.write(str(time) + ",")
 		
@@ -39,7 +39,8 @@ def stats(times, timeKeys):
 	#Based on code by https://www.reddit.com/user/yovliporat
 	#https://drive.google.com/file/d/0B7qI7oJsiTPGcjY2VlpoQi1hLVU/view
 	dictonary = OrderedDict()
-	totalTime = 0
+	last3Times, last5Times, last12Times = times[-3:], times[-5:], times[-12:]
+	totalTime, sumLast3Times, sumLast5Times, sumLast12Times = sum(times), sum(last3Times), sum(last5Times), sum(last12Times)
 	
 	for value in timeKeys:
 		dictonary[float(value)] = 0
@@ -49,11 +50,13 @@ def stats(times, timeKeys):
 			if time < key:
 				dictonary[key] += 1
 	
-	for time in times:
-		totalTime += time
-	
 	print("Solves: " + str(len(times)))
+	print("Ao3: " + str(round(sumLast3Times / len(last3Times), 3)))
+	print("Ao5: " + str(round(sumLast5Times / len(last5Times), 3)))
+	print("Ao12: " + str(round(sumLast12Times / len(last12Times), 3)))
 	print("Average: " + str(round(totalTime / len(times), 3)))
+	print("Best: " + str(min(times)))
+	print("Worst: " + str(max(times)))
 	for key, val in dictonary.items():
 		print("Sub-{}: {} [{}%]".format(str(key), str(val), str(float(val) / float(len(times)) * 100.0)[:5]))
 
