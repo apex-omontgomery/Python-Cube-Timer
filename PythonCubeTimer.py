@@ -1,7 +1,6 @@
 from time import sleep, perf_counter
 import datetime
 from collections import OrderedDict
-#import matplotlib.pyplot
 import csv, os
 
 #Clears the console
