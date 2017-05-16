@@ -1,7 +1,7 @@
 from time import sleep, perf_counter
 import datetime
 from collections import OrderedDict
-from math import ceil
+from math import ceil, floor
 import csv, os
 
 #Clears the console
@@ -67,10 +67,11 @@ def stats(times, timeKeys, timestamps):
 			if time < key:
 				dictonary[key] += 1
 	
-	if not len(times) % 2:
-		mean = sortedTimes[len(sortedTimes) / 2] + sortedTimes[1 + len(sortedTimes) / 2] / 2
-	else:
+	
+	if len(times) % 2 == 0:
 		mean = sortedTimes[ceil(len(sortedTimes) / 2)]
+	else:
+		mean = sortedTimes[floor(len(sortedTimes) / 2)] + sortedTimes[ceil(len(sortedTimes) / 2)] / 2
 	
 	clear()
 	print("\nSolves:   " + str(len(times)))
@@ -92,7 +93,7 @@ while True:
 	try:
 		times, timestamps = readTimes()
 	except FileNotFoundError:
-		print("Error, file not found.")
+		print("Error, file \"times.csv\n not found.")
 	except Exception as e:
 		print("Error: " + str(e))
 		
