@@ -1,6 +1,10 @@
+print("Importing pyplot...")
 import matplotlib.pyplot as pyplot
+print("Done!\nImporting scipy...")
 from scipy.stats import linregress
+print("Done!\nImporting csv...")
 import csv
+print("Done!")
 
 #Reads the times file and returns the times as a list
 def readTimes():
@@ -17,6 +21,8 @@ def plot(times, slope, intercept):
 	
 	#Setting the size to 16 * 9 inches
 	pyplot.rcParams["figure.figsize"] = (16, 9)
+	
+	print("Plotting...")
 	
 	#Plotting the best and worst times
 	pyplot.scatter(times.index(max(times)), max(times), color = "r", lw = 3.0)
@@ -40,8 +46,13 @@ def plot(times, slope, intercept):
 	pyplot.xlabel("Solves")
 	pyplot.ylabel("Seconds")
 	
+	print("Done!\nSaving...")
+	
 	#Saving the image
-	pyplot.savefig("plot.png", bbox_inches = "tight")
+	pyplot.savefig("plot.png", bbox_inches = "tight", dpi = 200)
+	
+	print("Done!")
+	
 	#pyplot.show()
 
 times = readTimes()
