@@ -4,10 +4,6 @@ from collections import OrderedDict
 from math import ceil, floor
 import csv, os
 
-#The inspection time in seconds
-#Change it to whatever suits you
-#inspectionTime = 15
-
 
 #The time keys for displaying sub-x stats
 #Change it to whatever suits you
@@ -45,11 +41,6 @@ def runTimer():
 	input()
 	end =  perf_counter()
 	return round(end - start, 3)
-
-
-#Pauses the program for the specified amount of time
-#def inspection(inspectionTime):
-#	sleep(inspectionTime)
 
 
 def stats(times, timeKeys, timestamps):
