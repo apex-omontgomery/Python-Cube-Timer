@@ -17,7 +17,6 @@ def getConfig():
 	return configValues
 
 
-#Clears the console
 def clear():
 	os.system("cls" if os.name == "nt" else "clear")
 
@@ -69,7 +68,7 @@ def stats(times, timestamps, configValues):
 					dictonary[key] += 1
 			
 		for key, val in dictonary.items():
-			print("Sub-{}: {} [{}%]".format(str(key), str(val), str(float(val) / float(len(times)) * 100.0)[:5]))	
+			print("Sub-{}: {} [{}%]".format(str(key), str(val), str(float(val) / float(len(times)) * 100.0)[:5]))
 	
 	
 	if configValues["solves"] == "True":
