@@ -1,7 +1,7 @@
 from time import sleep, perf_counter
 import datetime
 from collections import OrderedDict
-from math import ceil, floor
+from math import ceil, floor, sqrt
 import csv
 import os
 import configparser
@@ -48,10 +48,24 @@ def runTimer():
 	end =  perf_counter()
 	return round(end - start, 3)
 
-
+	
+def newBest(time):
+	print("""
+  _   _   ______  __          __    ____    ______    _____   _______   _ 
+ | \ | | |  ____| \ \        / /   |  _ \  |  ____|  / ____| |__   __| | |
+ |  \| | | |__     \ \  /\  / /    | |_) | | |__    | (___      | |    | |
+ | . ` | |  __|     \ \/  \/ /     |  _ <  |  __|    \___ \     | |    | |
+ | |\  | | |____     \  /\  /      | |_) | | |____   ____) |    | |    |_|
+ |_| \_| |______|     \/  \/       |____/  |______| |_____/     |_|    (_)
+	""")
+	print(str(time))
+	print("Enter to dismiss")
+	input()
+	
+	
 def stats(times, timestamps, configValues):
 	clear()
-	
+	print("\n")
 	#subx based on code by https://www.reddit.com/user/yovliporat
 	#https://drive.google.com/file/d/0B7qI7oJsiTPGcjY2VlpoQi1hLVU/view
 	if configValues["subx"] == "True":
@@ -129,6 +143,14 @@ def stats(times, timestamps, configValues):
 		print("Mean: " + str(mean))
 	
 	
+	if configValues["standarddeviation"] == "True":
+		average = sum(times) / len(times)
+		deviations = [(x - average) ** 2 for x in times]
+		variance = sum(deviations) / len(deviations)
+		standardDeviation = sqrt(variance)
+		print("SD: " + str(round(standardDeviation, 3)))
+	
+	
 	if configValues["best"] == "True":
 		print("Best: " + str(max(times)))
 		
@@ -156,6 +178,9 @@ while True:
 	
 	try:
 		time = runTimer()
+		if time < min(times):
+			newBest(time)
+		
 		writeTime(time)
 	except Exception as e:
 		print("Error: " + str(e))
