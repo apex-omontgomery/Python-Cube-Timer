@@ -133,12 +133,11 @@ def stats(times, timestamps, configValues):
 		
 	
 	if configValues["mean"] == "True":
-		sortedTimes = times
-		sortedTimes.sort()
-		if len(times) % 2 == 0:
-			mean = sortedTimes[ceil(len(sortedTimes) / 2)]
+		sortedTimes = sorted(times)
+		if len(sortedTimes) % 2 == 0:
+			mean = round(sortedTimes[ceil(len(sortedTimes) / 2)], 3)
 		else:
-			mean = sortedTimes[floor(len(sortedTimes) / 2)] + sortedTimes[ceil(len(sortedTimes) / 2)] / 2
+			mean = round(sortedTimes[floor(len(sortedTimes) / 2)] + sortedTimes[ceil(len(sortedTimes) / 2)] / 2, 3)
 		
 		print("Mean: " + str(mean))
 	
@@ -152,21 +151,21 @@ def stats(times, timestamps, configValues):
 	
 	
 	if configValues["best"] == "True":
-		print("Best: " + str(max(times)))
+		print("Best: " + str(min(times)))
 		
 	
 	if configValues["worst"] == "True":
-		print("Worst: " + str(min(times)))
+		print("Worst: " + str(max(times)))
 	
 	
 	if configValues["latest"] == "True":
-		latestTime = times[-1]
-		print("Latest: " + str(latestTime))
+		print("Latest: " + str(times[-1]))
 
+	
+configValues = getConfig()
 
 while True:
 	try:
-		configValues = getConfig()
 		times, timestamps = readTimes()
 		stats(times, timestamps, configValues)
 	except IndexError:
