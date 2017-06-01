@@ -5,6 +5,8 @@ from math import ceil, floor, sqrt
 import csv
 import os
 import configparser
+from tkinter import *
+from tkinter import ttk
 
 
 def getConfig():
@@ -39,12 +41,8 @@ def readTimes():
 	return times, timestamps
 
 
-def runTimer():
-	print("Press enter to start timer")
-	input()
+def toggleTimer():
 	start =  perf_counter()
-	print("Press enter to stop timer")
-	input()
 	end =  perf_counter()
 	return round(end - start, 3)
 
@@ -164,22 +162,34 @@ def stats(times, timestamps, configValues):
 	
 configValues = getConfig()
 
-while True:
-	try:
-		times, timestamps = readTimes()
-		stats(times, timestamps, configValues)
-	except IndexError:
-		print("Error, no recorded solves.")
-	except FileNotFoundError:
-		print("Error, file \"times.csv\n not found.")
-	except Exception as e:
-		print("Error: " + str(e))
-	
-	try:
-		time = runTimer()
-		if time < min(times):
-			newBest(time)
-		
-		writeTime(time)
-	except Exception as e:
-		print("Error: " + str(e))
+#while True:
+#	try:
+#		times, timestamps = readTimes()
+#		stats(times, timestamps, configValues)
+#	except IndexError:
+#		print("Error, no recorded solves.")
+#	except FileNotFoundError:
+#		print("Error, file \"times.csv\n not found.")
+#	except Exception as e:
+#		print("Error: " + str(e))
+#	
+#	try:
+#		time = runTimer()
+#		if time < min(times):
+#			newBest(time)
+#		
+#		writeTime(time)
+#	except Exception as e:
+#		print("Error: " + str(e))
+
+root = Tk()
+root.title("Cubing Timer")
+mainframe = ttk.Frame(root, padding = "3 3 12 12")
+mainframe.grid(column = 0, row = 0, sticky = (N, W, E, S))
+mainframe.columnconfigure(0, weight = 1)
+mainframe.rowconfigure(0, weight = 1)
+
+ttk.Button(mainframe, text = "START", command = toggleTimer).grid(column = 1, row = 1, sticky = (S))
+root.bind("<space>", toggleTimer)
+
+root.mainloop()
