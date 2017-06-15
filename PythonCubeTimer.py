@@ -1,10 +1,10 @@
 import csv
 import datetime
-from math import floor, sqrt
+from math import floor, sqrt, ceil
 from time import perf_counter
 from tkinter import *
 from tkinter import ttk
-import plot
+#import matplotlib as plot
 
 
 def write_time(time):
@@ -40,16 +40,19 @@ class Application:
         self.times = None
         self.timer_groups = [3, 5, 12, 50, 100, 1000]
         self.timer_containers = []
-        self.timer_strings = [StringVar() for _ in self.timer_groups]
+
         self.timer_labels = []
         self.total_solves_avg = None
-        self.total_solves_strings = StringVar()
+
         self.total_solves_avg_labels = None
         self.special_calc_groups = ['median', 'stdev', 'best', 'worst', 'latest']
         self.special_calc_vals_list = []
-        self.special_calc_strings = [StringVar() for _ in self.timer_groups]
+
         self.special_calc_labels = []
         self.root = Tk()
+        self.total_solves_strings = StringVar()
+        self.special_calc_strings = [StringVar() for _ in self.timer_groups]
+        self.timer_strings = [StringVar() for _ in self.timer_groups]
         self.root.title("Cubing Timer")
         self.root.option_add("*tearOff", False)
         self.mainframe = None
@@ -70,13 +73,14 @@ class Application:
         sorted_times = sorted(times)
         # total solves
         average = sum(times) / len(times)
-        self.total_solves_avg.round(average, 3)
+        self.total_solves_avg = round(average, 3)
         # median
-        ciel_median_index = len(sorted_times) // 2 + 1  # floor plus one.
+        ceil_median_index = ceil(len(sorted_times) / 2)
+
         if len(sorted_times) % 2 == 0:
-            median = round(sorted_times[ciel_median_index], 3)
+            median = round(sorted_times[ceil_median_index], 3)
         else:
-            median = (sum(sorted_times[ciel_median_index] + sorted_times[ciel_median_index]) / 2, 3)
+            median = (sum(sorted_times[ceil_median_index: ceil_median_index +2]) / 2, 3)
         self.special_calc_vals_list.append(median)
         # stdev
         deviations = [(x - average) ** 2 for x in times]
@@ -96,10 +100,10 @@ class Application:
         self.timerLabel.configure(text="%02d:%02d" % (self.minutes, self.seconds))
         self.root.after(1000, self.update_timer)
 
-    def update_image(self, times):
-        plot.plot(times)
-        self.image = PhotoImage(file="plot.png")
-        self.plotImage.configure(image=self.image)
+   # def update_image(self, times):
+   #     plot.plot(times)
+   #     self.image = PhotoImage(file="plot.png")
+   #     self.plotImage.configure(image=self.image)
 
     def timer(self):
         self.start = perf_counter()
@@ -117,11 +121,13 @@ class Application:
         self.total_solves_avg_labels.grid(column=1, row=1, sticky=E)
 
         for i in range(2, len(self.timer_groups) + 2):
-            self.timer_labels.append(ttk.Label(self.mainframe, textvariable=self.timer_strings[i]))
+            self.timer_labels.append(ttk.Label(self.mainframe, textvariable=self.timer_strings[i-2]))
             self.timer_labels[-1].grid(column=1, row=i, sticky=E)
 
-        for j in range(1+len(self.timer_groups), 2 + len(self.timer_groups) + len(self.special_calc_strings)):
-            self.special_calc_labels.append(ttk.Label(self.mainframe, textvariable=self.special_calc_strings[j]))
+        
+        for j in range(1+len(self.timer_groups), 1+ len(self.timer_groups) + len(self.special_calc_strings)):
+        
+            self.special_calc_labels.append(ttk.Label(self.mainframe, textvariable=self.special_calc_strings[j- 1 - len(self.timer_groups)]))
             self.timer_labels[-1].grid(column=1, row=j, sticky=E)
 
     def init_gui(self):
@@ -133,7 +139,7 @@ class Application:
         self.mainframe.rowconfigure(0, weight=1)
         self.create_app_labels()
         self.times = read_times()
-        plot.plot(self.times, 1, 1, 1)
+        #plot.plot(self.times, 1, 1, 1)
         self.image = PhotoImage(file="plot.png")
         self.plotImage = ttk.Label(self.mainframe, image=self.image)
         self.plotImage.grid(column=2, row=1, rowspan=13, sticky=(E))
